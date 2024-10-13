@@ -1,0 +1,17 @@
+<!-- templates/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome to the Home Page!</h1>
+    <p>This is some text on the front page.</p>
+    
+    <!-- Display QR Code -->
+    <h2>Scan this QR code to visit the website:</h2>
+    <img src="{{ url_for('static', filename='website_qr_code.png') }}" alt="QR Code">
+</body>
+</html>
