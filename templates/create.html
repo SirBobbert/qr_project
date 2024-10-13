@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Create Your Own Piktogram</title>
+    <title>Lav dit eget piktogram!</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .grid-cell {
@@ -32,7 +32,7 @@
     {% include 'header.html' %}
 
     <main>
-        <h2>Create Your Own Piktogram</h2>
+        <h2>Lav dit eget piktogram!</h2>
         
         <div class="image-container">
             <h3>Lokationer</h3>
@@ -61,7 +61,7 @@
         </div>
 
         <div>
-            <label for="weekday">Vælg en dag</label>
+            <label for="weekday">Vælg en dag:</label>
             <select id="weekday" onchange="updateHeaderText(this.value)">
                 <option value="">Vælg en dag</option>
                 <option value="Mandag">Mandag</option>
@@ -73,14 +73,13 @@
         </div>
 
         <div class="canvas-container">
-            <h3>Click Grid Cells to Place Selected Image</h3>
-
+<br/>
             <div id="grid" class="image-grid">
-                <div class="header-text" id="header-text">Your Selected Day</div>
+                <div class="header-text" id="header-text">Vælg en dag!</div>
                 <!-- Top Row with Text Inputs -->
                 {% for i in range(5) %}
                 <div class="grid-cell">
-                    <input type="text" placeholder="Input" />
+                    <input type="text" placeholder="Lokation" />
                 </div>
                 {% endfor %}
                 
@@ -92,11 +91,11 @@
                 <!-- Bottom Row with Text Inputs -->
                 {% for i in range(5) %}
                 <div class="grid-cell">
-                    <input type="text" placeholder="Input" />
+                    <input type="text" placeholder="Pædagog" />
                 </div>
                 {% endfor %}
             </div>
-            <button id="export-btn">Export as Image</button>
+            <button id="export-btn">Eksporter som billede</button>
         </div>
     </main>
 
