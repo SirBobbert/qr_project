@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Feedback</title>
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main>
+        <h2>Feedback</h2>
+        <form id="feedback-form">
+            <input type="text" placeholder="Your Name" required>
+            <textarea placeholder="Your Comments" required></textarea>
+            <input type="number" min="1" max="5" placeholder="Rating (1-5)" required>
+            <button type="submit">Submit</button>
+        </form>
+
+        <h2>Previous Feedback</h2>
+        <div class="comments">
+            <div class="comment">
+                <p>"Dette website har gjort det så nemt at lave mine egne piktogrammer. Tak!"</p>
+                <span>- Jens Hansen</span>
+                <div class="rating">Rating: ⭐⭐⭐⭐⭐</div>
+            </div>
+            <div class="comment">
+                <p>"Jeg elsker de mange muligheder for tilpasning. Det er meget intuitivt!"</p>
+                <span>- Maria Sørensen</span>
+                <div class="rating">Rating: ⭐⭐⭐⭐</div>
+            </div>
+            <div class="comment">
+                <p>"Brugergrænsefladen er simpel og effektiv. Jeg anbefaler det til alle!"</p>
+                <span>- Peter Nielsen</span>
+                <div class="rating">Rating: ⭐⭐⭐⭐⭐</div>
+            </div>
+            <div class="comment">
+                <p>"Fantastisk oplevelse! Jeg kunne hurtigt lave de piktogrammer, jeg havde brug for."</p>
+                <span>- Anna Pedersen</span>
+                <div class="rating">Rating: ⭐⭐⭐⭐⭐</div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

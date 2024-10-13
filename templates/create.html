@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Create Your Own Piktogram</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> <!-- Include html2canvas -->
+    <style>
+        .grid-cell {
+            position: relative; /* Allows positioning of child elements */
+        }
+        .cell-input {
+            position: absolute; /* Place input on top of the cell */
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background: transparent; /* Transparent background */
+            border: none; /* No border */
+            text-align: center; /* Center text */
+            z-index: 2; /* Higher z-index to stay on top */
+        }
+        .dropped-image {
+            position: absolute; /* Allow image to be positioned within the cell */
+            width: 100%; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            z-index: 1; /* Lower z-index for images */
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main>
+        <h2>Create Your Own Piktogram</h2>
+        
+        <div class="image-container">
+            <h3>Lokationer</h3>
+            <div id="location-list" class="image-list">
+                <img src="{{ url_for('static', filename='location/1.png') }}" class="draggable image-size" draggable="true" alt="Location 1">
+                <img src="{{ url_for('static', filename='location/2.png') }}" class="draggable image-size" draggable="true" alt="Location 2">
+                <img src="{{ url_for('static', filename='location/3.png') }}" class="draggable image-size" draggable="true" alt="Location 3">
+                <!-- Add more location images here -->
+            </div>
+            
+            <h3>Aktiviteter</h3>
+            <div id="activity-list" class="image-list">
+                <img src="{{ url_for('static', filename='activity/1.png') }}" class="draggable image-size" draggable="true" alt="Activity 1">
+                <img src="{{ url_for('static', filename='activity/2.png') }}" class="draggable image-size" draggable="true" alt="Activity 2">
+                <img src="{{ url_for('static', filename='activity/3.png') }}" class="draggable image-size" draggable="true" alt="Activity 3">
+                <img src="{{ url_for('static', filename='activity/4.png') }}" class="draggable image-size" draggable="true" alt="Activity 4">
+                <!-- Add more activity images here -->
+            </div>
+
+            <h3>Pædagoger</h3>
+            <div id="host-list" class="image-list">
+                <img src="{{ url_for('static', filename='host/1.png') }}" class="draggable image-size" draggable="true" alt="Host 1">
+                <img src="{{ url_for('static', filename='host/2.png') }}" class="draggable image-size" draggable="true" alt="Host 2">
+                <!-- Add more host images here -->
+            </div>
+            
+        </div>
+
+        <div>
+            <label for="weekday">Vælg en dag</label>
+            <select id="weekday" onchange="updateHeaderText(this.value)">
+                <option value="">Vælg en dag</option>
+                <option value="Monday">Mandag</option>
+                <option value="Tuesday">Tirsdag</option>
+                <option value="Wednesday">Onsdag</option>
+                <option value="Thursday">Torsdag</option>
+                <option value="Friday">Fredag</option>
+            </select>
+        </div>
+
+        <div class="canvas-container">
+            <h3>Drag Images Here</h3>
+
+            <div id="grid" class="image-grid">
+                <div class="header-text" id="header-text">Your Selected Day</div>
+                <!-- 5x5 Grid Cells -->
+
+
+                {% for i in range(5) %}
+                <div class="grid-cell" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <input type="text" placeholder="Enter text" class="cell-input" oninput="updateGridCellText(event)">
+                </div>
+                {% endfor %}
+                {% for i in range(15) %}
+                <div class="grid-cell" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                {% endfor %}
+                {% for i in range(5) %}
+                <div class="grid-cell" ondrop="drop(event)" ondragover="allowDrop(event)">
+                    <input type="text" placeholder="Enter text" class="cell-input" oninput="updateGridCellText(event)">
+                </div>
+                {% endfor %}
+            </div>
+            <button id="export-btn">Export as Image</button>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Function to update the header text with the selected day
+        function updateHeaderText(day) {
+            document.getElementById('header-text').innerText = day; // Set the text
+        }
+        
+        // Update the text in the grid cell input
+        function updateGridCellText(event) {
+            const inputField = event.target;
+            inputField.value = inputField.value; // This can be customized if you need to process the text
+        }
+    
+        // Drag and Drop Functions
+        function allowDrop(event) {
+            event.preventDefault(); // Prevent default to allow drop
+        }
+    
+        function drag(event) {
+            event.dataTransfer.setData('text/plain', event.target.src); // Store the image URL
+        }
+    
+        function drop(event) {
+            event.preventDefault(); // Prevent default behavior
+            const imgSrc = event.dataTransfer.getData('text/plain');
+            const imgElement = document.createElement('img');
+            imgElement.src = imgSrc;
+            imgElement.classList.add('dropped-image');
+            event.target.innerHTML = ''; // Clear the cell
+            event.target.appendChild(imgElement); // Add the image to the cell
+        }
+    
+        // Ensure the export button functionality is only added once
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('export-btn').addEventListener('click', () => {
+                const grid = document.getElementById('grid');
+                html2canvas(grid).then(canvas => {
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL('image/png');
+                    link.download = 'piktogram.png';
+                    
+                    // Check for input text in the top row
+                    const inputs = document.querySelectorAll('.cell-input');
+                    inputs.forEach((input, index) => {
+                        if (input.value.trim() !== '') {
+                            const text = input.value.trim();
+                            link.download = text + ' - piktogram.png'; // Set filename with input text
+                        }
+                    });
+
+                    link.click();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
